@@ -289,103 +289,116 @@ class modComptAE extends DolibarrModules
 		//    1=>array('label'=>'My label', 'jobtype'=>'command', 'command'=>'', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>1, 'unitfrequency'=>3600*24, 'status'=>0, 'test'=>'isModEnabled("comptae")', 'priority'=>50)
 		// );
 
-		// Permissions provided by this module
+	// Permissions provided by this module
 		$this->rights = array();
 		$r = 0;
-		// Add here entries to declare new permissions
-		/* BEGIN MODULEBUILDER PERMISSIONS */
-		/*
-		$o = 1;
-		$this->rights[$r][0] = $this->numero . sprintf("%02d", ($o * 10) + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Read objects of ComptAE'; // Permission label
-		$this->rights[$r][4] = 'myobject';
-		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->hasRight('comptae', 'myobject', 'read'))
+
+		// Droit de lecture (Consulter)
+		$this->rights[$r][0] = $this->numero . '01'; // ID unique (ex: 50000001)
+		$this->rights[$r][1] = 'Consulter la comptabilité (Recettes/Dépenses)'; // Libellé
+		$this->rights[$r][2] = 'r'; // Type (r=read, w=write, d=delete)
+		$this->rights[$r][3] = 0;   // 1 = activé par défaut pour tous
+		$this->rights[$r][4] = 'read'; // La clé qui crée $user->rights->comptae->read
 		$r++;
-		$this->rights[$r][0] = $this->numero . sprintf("%02d", ($o * 10) + 2); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Create/Update objects of ComptAE'; // Permission label
-		$this->rights[$r][4] = 'myobject';
-		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->hasRight('comptae', 'myobject', 'write'))
+
+		// Droit d'écriture (Créer/Modifier/Payer URSSAF)
+		$this->rights[$r][0] = $this->numero . '02';
+		$this->rights[$r][1] = 'Gérer la comptabilité et payer URSSAF';
+		$this->rights[$r][2] = 'w';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'write'; // La clé qui crée $user->rights->comptae->write
 		$r++;
-		$this->rights[$r][0] = $this->numero . sprintf("%02d", ($o * 10) + 3); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Delete objects of ComptAE'; // Permission label
-		$this->rights[$r][4] = 'myobject';
-		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->hasRight('comptae', 'myobject', 'delete'))
-		$r++;
-		*/
 		/* END MODULEBUILDER PERMISSIONS */
 
 
-		// Main menu entries to add
+// Main menu entries to add
 		$this->menu = array();
 		$r = 0;
-		// Add here entries to declare new menus
-		/* BEGIN MODULEBUILDER TOPMENU */
+
+		// --- MENU HAUT (TOP MENU) ---
 		$this->menu[$r++] = array(
-			'fk_menu' => '', // Will be stored into mainmenu + leftmenu. Use '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type' => 'top', // This is a Top menu entry
-			'titre' => 'ModuleComptAEName',
+			'fk_menu' => '',
+			'type' => 'top',
+			'titre' => 'ModuleComptAEName',   // Clé de traduction dans le fichier .lang
 			'prefix' => img_picto('', $this->picto, 'class="pictofixedwidth valignmiddle"'),
 			'mainmenu' => 'comptae',
 			'leftmenu' => '',
 			'url' => '/comptae/comptaeindex.php',
-			'langs' => 'comptae@comptae', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs' => 'comptae@comptae',
 			'position' => 1000 + $r,
-			'enabled' => 'isModEnabled("comptae")', // Define condition to show or hide menu entry. Use 'isModEnabled("comptae")' if entry must be visible if module is enabled.
-			'perms' => '1', // Use 'perms'=>'$user->hasRight("comptae", "myobject", "read")' if you want your menu with a permission rules
+			'enabled' => '$conf->comptae->enabled',
+			'perms' => '1',
 			'target' => '',
-			'user' => 2, // 0=Menu for internal users, 1=external users, 2=both
+			'user' => 2,
 		);
-		/* END MODULEBUILDER TOPMENU */
 
-		/* BEGIN MODULEBUILDER LEFTMENU MYOBJECT */
-		/*
-		$this->menu[$r++]=array(
-			'fk_menu' => 'fk_mainmenu=comptae',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type' => 'left',                          // This is a Left menu entry
-			'titre' => 'MyObject',
-			'prefix' => img_picto('', $this->picto, 'class="pictofixedwidth valignmiddle paddingright"'),
+		// --- MENU GAUCHE : Tableau de bord ---
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=comptae',
+			'type' => 'left',
+			'titre' => 'Tableau de bord',
+			'prefix' => img_picto('', 'object_home', 'class="pictofixedwidth valignmiddle"'),
 			'mainmenu' => 'comptae',
-			'leftmenu' => 'myobject',
+			'leftmenu' => 'comptae_dashboard',
 			'url' => '/comptae/comptaeindex.php',
-			'langs' => 'comptae@comptae',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs' => 'comptae@comptae',
 			'position' => 1000 + $r,
-			'enabled' => 'isModEnabled("comptae")', // Define condition to show or hide menu entry. Use 'isModEnabled("comptae")' if entry must be visible if module is enabled.
-			'perms' => '$user->hasRight("comptae", "myobject", "read")',
+			'enabled' => '$conf->comptae->enabled',
+			'perms' => '1',
 			'target' => '',
-			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
-			'object' => 'MyObject'
+			'user' => 2,
 		);
-		$this->menu[$r++]=array(
-			'fk_menu' => 'fk_mainmenu=comptae,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type' => 'left',			                // This is a Left menu entry
-			'titre' => 'New_MyObject',
+
+		// --- MENU GAUCHE : Livre des Recettes ---
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=comptae',
+			'type' => 'left',
+			'titre' => 'Livre des Recettes',
+			'prefix' => img_picto('', 'bill', 'class="pictofixedwidth valignmiddle"'),
 			'mainmenu' => 'comptae',
-			'leftmenu' => 'comptae_myobject_new',
-			'url' => '/comptae/myobject_card.php?action=create',
-			'langs' => 'comptae@comptae',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'leftmenu' => 'comptae_recettes',
+			'url' => '/comptae/recettes.php',
+			'langs' => 'comptae@comptae',
 			'position' => 1000 + $r,
-			'enabled' => 'isModEnabled("comptae")', // Define condition to show or hide menu entry. Use 'isModEnabled("comptae")' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms' => '$user->hasRight("comptae", "myobject", "write")'
+			'enabled' => '$conf->comptae->enabled',
+			'perms' => '1',
 			'target' => '',
-			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
-			'object' => 'MyObject'
+			'user' => 2,
 		);
-		$this->menu[$r++]=array(
-			'fk_menu' => 'fk_mainmenu=comptae,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type' => 'left',			                // This is a Left menu entry
-			'titre' => 'List_MyObject',
+
+		// --- MENU GAUCHE : Livre des Dépenses ---
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=comptae',
+			'type' => 'left',
+			'titre' => 'Livre des Dépenses',
+			'prefix' => img_picto('', 'payment', 'class="pictofixedwidth valignmiddle"'),
 			'mainmenu' => 'comptae',
-			'leftmenu' => 'comptae_myobject_list',
-			'url' => '/comptae/myobject_list.php',
-			'langs' => 'comptae@comptae',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'leftmenu' => 'comptae_depenses',
+			'url' => '/comptae/depenses.php',
+			'langs' => 'comptae@comptae',
 			'position' => 1000 + $r,
-			'enabled' => 'isModEnabled("comptae")', // Define condition to show or hide menu entry. Use 'isModEnabled("comptae")' if entry must be visible if module is enabled.
-			'perms' => '$user->hasRight("comptae", "myobject", "read")'
+			'enabled' => '$conf->comptae->enabled',
+			'perms' => '1',
 			'target' => '',
-			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
-			'object' => 'MyObject'
+			'user' => 2,
 		);
-		*/
+
+		// --- MENU GAUCHE : Paiement URSSAF ---
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=comptae',
+			'type' => 'left',
+			'titre' => 'URSSAF',
+			'prefix' => img_picto('', 'bank', 'class="pictofixedwidth valignmiddle"'),
+			'mainmenu' => 'comptae',
+			'leftmenu' => 'comptae_urssaf',
+			'url' => '/comptae/urssaf.php',
+			'langs' => 'comptae@comptae',
+			'position' => 1000 + $r,
+			'enabled' => '$conf->comptae->enabled',
+			'perms' => '1',
+			'target' => '',
+			'user' => 2,
+		);
 		/* END MODULEBUILDER LEFTMENU MYOBJECT */
 
 

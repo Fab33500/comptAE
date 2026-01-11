@@ -83,3 +83,30 @@ function comptaeAdminPrepareHead()
 
 	return $head;
 }
+
+/**
+ * Prepare tabs for URSSAF pages
+ *
+ * @return array
+ */
+function comptaeUrssafPrepareHead()
+{
+	global $langs, $conf;
+
+	$langs->load("comptae@comptae");
+
+	$h = 0;
+	$head = array();
+
+	$head[$h][0] = dol_buildpath("/comptae/urssaf.php", 1);
+	$head[$h][1] = $langs->trans("Paiement URSSAF");
+	$head[$h][2] = 'payment'; // Identifiant de l'onglet actif
+	$h++;
+
+	$head[$h][0] = dol_buildpath("/comptae/urssaf_taux.php", 1);
+	$head[$h][1] = $langs->trans("Configuration taux");
+	$head[$h][2] = 'taux'; // Identifiant de l'onglet actif
+	$h++;
+
+	return $head;
+}

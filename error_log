@@ -1,0 +1,8 @@
+[11-Jan-2026 10:37:44 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "JS_CHARTJS" in /home/kote6513/compta.prevense.fr/custom/comptae/comptaeindex.php:133
+Stack trace:
+#0 {main}
+  thrown in /home/kote6513/compta.prevense.fr/custom/comptae/comptaeindex.php on line 133
+[11-Jan-2026 10:53:21 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "JS_CHARTJS" in /home/kote6513/compta.prevense.fr/custom/comptae/comptaeindex.php:204
+Stack trace:
+#0 {main}
+  thrown in /home/kote6513/compta.prevense.fr/custom/comptae/comptaeindex.php on line 204
