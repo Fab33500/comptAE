@@ -1,0 +1,42 @@
+# Translation file
+
+#
+# Generic
+#
+
+# Module label 'ModuleComptAEName'
+ModuleComptAEName = ComptAE
+# Module description 'ModuleComptAEDesc'
+ModuleComptAEDesc = ComptAE description
+
+#
+# Admin page
+#
+ComptAESetup = ComptAE setup
+Settings = Settings
+ComptAESetupPage = ComptAE setup page
+NewSection=New section
+COMPTAE_MYPARAM1 = My param 1
+COMPTAE_MYPARAM1Tooltip = My param 1 tooltip
+COMPTAE_MYPARAM2=My param 2
+COMPTAE_MYPARAM2Tooltip=My param 2 tooltip
+
+
+#
+# About page
+#
+About = About
+ComptAEAbout = About ComptAE
+ComptAEAboutPage = ComptAE about page
+
+#
+# Sample page
+#
+ComptAEArea = Home ComptAE
+MyPageName = My page name
+
+#
+# Sample widget
+#
+MyWidget = My widget
+MyWidgetDescription = My widget description
